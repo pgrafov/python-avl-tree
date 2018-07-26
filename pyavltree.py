@@ -371,6 +371,9 @@ class AVLTree():
         
     def remove_branch (self, node):
         parent = node.parent
+        leftChild = node.leftChild
+        rightChild = node.rightChild
+
         if (parent):
             if parent.leftChild == node:
                 parent.leftChild = node.rightChild or node.leftChild
@@ -386,10 +389,19 @@ class AVLTree():
         del node
         # rebalance
         node = parent
-        while (node):
-            if not node.balance() in [-1, 0, 1]:
-                self.rebalance(node)
-            node = node.parent
+
+        if node:
+            while (node):
+                if not node.balance() in [-1, 0, 1]:
+                    self.rebalance(node)
+                node = node.parent
+        else:
+            if leftChild:
+                self.rootNode = leftChild
+            else:
+                self.rootNode = rightChild
+
+            self.rootNode.parent = None
         
     def swap_with_successor_and_remove (self, node):
         successor = self.find_smallest(node.rightChild)
